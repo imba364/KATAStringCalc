@@ -7,15 +7,22 @@ public class StringCalculator {
 }
 class OperationHandler {
     public static void print() {
+
         System.out.println("Введите выражение в формате строка операция строка, число операция число или строка операция число:");
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
         System.out.println(StringHandler.processing(input));
-
     }
 }
 class StringHandler {
-
+    public static boolean isInteger(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
     public static String processing(String input) {
         char operation = 0;
         String a = "";
@@ -34,14 +41,17 @@ class StringHandler {
         } else if (input.contains(" / ")) {
             data = input.split(" / ");
             operation = '/';
+        } else
+            return "Некорректная операция";
+        if ((!data[0].contains("\""))) {
+            throw new IllegalArgumentException("Первый аргумент должен быть строкой");
         }
         replace(data);
         a = data[0];
         b = data[1];
-        Exceptions.verifyStringLengths(a, b,result);
-
 
         switch (operation) {
+
             case '+':
                 return "\"" + (a + b) + "\"";
 
@@ -49,50 +59,87 @@ class StringHandler {
                 return "\"" + (a.replace(b, "")) + "\"";
 
             case '*':
-                int n = Integer.parseInt(b);
-                result = "";
-                for (int i = 0; i < n; i++) {
-                    result += a;
+                try {
+                    if (!isInteger(b)) {
+                        throw new IllegalArgumentException("Число должно быть целым");
+                    }
+                    int n = Integer.parseInt(b);
+                    result = "";
+                    for (int i = 0; i < n; i++) {
+                        result += a;
+                    }
+                    if (result.length() > 40) {
+                        result = result.substring(0, 40) + "...";
+                        return result;
+                    }
+                    if (b.contains("\"")) {
+                        throw new IllegalArgumentException("При делении или умножении второе число должно быть указано без кавычек");
+                    }
+                    if (n < 1 || n > 10) {
+                        throw new IllegalArgumentException("Число должно быть от 1 до 10");
+                    } else
+                        return "\"" + result + "\"";
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("При делении или умножении второе число должно быть указано без кавычек");
                 }
-                if (n < 1 || n > 10) {
-                    throw new IllegalArgumentException("Число должно быть от 1 до 10");
-                }
-                return "\"" + result + "\"";
 
             case '/':
-                int divisor = Integer.parseInt(b);
-                int newLength = a.length() / divisor;
-                result = a.substring(0, newLength);
-                if (divisor < 1 || divisor > 10) {
-                    throw new IllegalArgumentException("Число должно быть от 1 до 10");
+                try {
+                    if (!isInteger(b)) {
+                        throw new IllegalArgumentException("Число должно быть целым");
+                    }
+                    int divisor = Integer.parseInt(b);
+                    int newLength = a.length() / divisor;
+                    result = a.substring(0, newLength);
+                    if (divisor < 1 || divisor > 10) {
+                        throw new IllegalArgumentException("Число должно быть от 1 до 10");
+                    }
+                    if (a.length() > 10 || b.length() > 10) {
+                        throw new IllegalArgumentException("Строка не должна быть длинее 10 символов");
+                    }
+                    if (b.contains("\"")) {
+                        throw new IllegalArgumentException("При делении или умножении второе число должно быть указано без кавычек");
+                    }
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("При делении или умножении второе число должно быть указано без кавычек");
                 }
+
                 return "\"" + result + "\"";
-
-
-            default:
-                return "Неподдерживаемая операция: " + operation;
-
         }
+        return input;
     }
-
-    public static String[] replace(String[] data) {
-        if((!data[0].contains("\""))){
-            throw new IllegalArgumentException("Первый аргумент должен быть строкой");
+    public static String[] replace (String[]data){
+        data[0] = data[0].replaceAll("\"", "");
+        data[1] = data[1].replaceAll("\"", "");
+        for (int i = 0; i < data.length; i++) {
+            data[i] = data[i].replace("\"", "");
         }
-        data[0] = data[0].replaceAll("\"","");
-        data[1] = data[1].replaceAll("\"","");
         return data;
     }
 }
-class Exceptions {
-    public static void verifyStringLengths(String a, String b, String result) {
-        if (a.length() > 10 || b.length() > 10) {
-            throw new IllegalArgumentException("Строка не должна быть длинее 10 символов");
-        }
-        if (result.length() > 40) {
-            result = result.substring(0, 40) + "...";
-        } else if (b.contains("\"")) {
-            throw new IllegalArgumentException("При делении или умножении второе число должно быть указано без кавычек");
-        }
-    }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
