@@ -92,7 +92,6 @@ class StringHandler {
                 }
 
             case '/':
-                try {
                     if (!isInteger(b)) {
                         throw new IllegalArgumentException("Число должно быть целым");
                     }
@@ -101,15 +100,7 @@ class StringHandler {
                     result = a.substring(0, newLength);
                     if (divisor < 1 || divisor > 10) {
                         throw new IllegalArgumentException("Число должно быть от 1 до 10");
-
-                    }
-                    if (b.contains("\"")) {
-                        throw new IllegalArgumentException("При делении или умножении второе число должно быть указано без кавычек");
-                    }
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("При делении или умножении второе число должно быть указано без кавычек");
                 }
-
                 return "\"" + result + "\"";
         }
         return input;
