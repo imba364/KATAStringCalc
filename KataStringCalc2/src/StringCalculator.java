@@ -46,6 +46,14 @@ class StringHandler {
         if ((!data[0].contains("\""))) {
             throw new IllegalArgumentException("Первый аргумент должен быть строкой");
         }
+        if (data[0].length() > 10 || data[1].length() > 10) {
+            throw new IllegalArgumentException("Строка не должна быть длинее 10 символов");
+        }
+        if (operation == '*' || operation == '/') {
+            if (data[1].contains("\"")) {
+                throw new IllegalArgumentException("Делить и умножать на строку нельзя");
+            }
+        }
         replace(data);
         a = data[0];
         b = data[1];
@@ -93,9 +101,7 @@ class StringHandler {
                     result = a.substring(0, newLength);
                     if (divisor < 1 || divisor > 10) {
                         throw new IllegalArgumentException("Число должно быть от 1 до 10");
-                    }
-                    if (a.length() > 10 || b.length() > 10) {
-                        throw new IllegalArgumentException("Строка не должна быть длинее 10 символов");
+
                     }
                     if (b.contains("\"")) {
                         throw new IllegalArgumentException("При делении или умножении второе число должно быть указано без кавычек");
