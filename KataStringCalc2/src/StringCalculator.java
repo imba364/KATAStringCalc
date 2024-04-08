@@ -46,9 +46,7 @@ class StringHandler {
         if ((!data[0].contains("\""))) {
             throw new IllegalArgumentException("Первый аргумент должен быть строкой");
         }
-        if (data[0].length() > 10 || data[1].length() > 10) {
-            throw new IllegalArgumentException("Строка не должна быть длинее 10 символов");
-        }
+
         if (operation == '*' || operation == '/') {
             if (data[1].contains("\"")) {
                 throw new IllegalArgumentException("Делить и умножать на строку нельзя");
@@ -57,6 +55,9 @@ class StringHandler {
         replace(data);
         a = data[0];
         b = data[1];
+        if (data[0].length() > 10 || data[1].length() > 10) {
+            throw new IllegalArgumentException("Строка не должна быть длинее 10 символов");
+        }
 
         switch (operation) {
 
